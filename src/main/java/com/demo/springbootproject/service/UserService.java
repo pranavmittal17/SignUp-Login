@@ -3,6 +3,8 @@ import com.demo.springbootproject.Entity.UserEntity;
 import com.demo.springbootproject.dto.SignUpRequestDTO;
 import com.demo.springbootproject.dto.SignUpResponseDTO;
 import com.demo.springbootproject.repository.UserRepository;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 import java.time.LocalDateTime;
 
@@ -22,11 +24,15 @@ public class UserService {
 
     public SignUpResponseDTO saveUser(SignUpRequestDTO signUpRequestDTO) {
         UserEntity user = new UserEntity();
+        
+        String decodedPassword = new String(
+        Base64.getDecoder().decode(signUpRequestDTO.getPassword()),
+        StandardCharsets.UTF_8);
 
-        if(!signUpRequestDTO.getConfirmPassword().equals(signUpRequestDTO.getPassword())){
+        if(!signUpRequestDTO.getConfirmPassword().equals(decodedPassword)){
             throw new IllegalArgumentException("Passwords do not match");        }
 
-        String encodedPassword = passwordEncoder.encode(signUpRequestDTO.getPassword());
+        String encodedPassword = passwordEncoder.encode(decodedPassword);
 
         user.setEmployeeId(signUpRequestDTO.getEmployeeId());
         user.setFirstName(signUpRequestDTO.getFirstName());

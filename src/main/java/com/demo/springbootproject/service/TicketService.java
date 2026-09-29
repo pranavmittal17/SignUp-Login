@@ -26,7 +26,7 @@ private TicketEntity createTicketEntity(TicketRequestDTO ticketRequest) {
     ticketEntity.setTitle(ticketRequest.getTitle());
     ticketEntity.setDescription(ticketRequest.getDescription());
     ticketEntity.setTicketPriority(ticketRequest.getTicketPriority());
-    ticketEntity.setCreatedBy(ticketRequest.getCreatedBy());
+    ticketEntity.setCreatedBy(ticketRequest.getCreatedBy()); //JWT
     ticketEntity.setTicketStatus(TicketStatus.OPEN);
 
     return ticketEntity;
