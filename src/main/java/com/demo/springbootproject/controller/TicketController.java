@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.List;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -16,18 +19,27 @@ import com.demo.springbootproject.dto.TicketResponseDTO;
 import com.demo.springbootproject.service.TicketService;
 
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.RequestParam;
 
-@RestController 
-@RequestMapping("/ticket")
+@RestController
+@RequestMapping("/tickets")
 public class TicketController {
+
     private final TicketService ticketService;
 
-    public TicketController(TicketService ticketService){
+    public TicketController(TicketService ticketService) {
         this.ticketService = ticketService;
     }
 
+    @GetMapping
+    public List<TicketResponseDTO> getAllTickets() {
+        return ticketService.getAllTickets();
+    }
+
     @PostMapping
-    public TicketResponseDTO ticket(@Valid @RequestBody TicketRequestDTO ticketRequestDTO) {
+    public TicketResponseDTO ticket(
+            @Valid @RequestBody TicketRequestDTO ticketRequestDTO) {
+
         return ticketService.createTicket(ticketRequestDTO);
     }
 
@@ -54,4 +66,11 @@ public class TicketController {
     }
 
 
+
+
+
+
 }
+        
+
+ 

@@ -1,13 +1,12 @@
 package com.demo.springbootproject.controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import com.demo.springbootproject.dto.SignUpRequestDTO;
 import com.demo.springbootproject.dto.SignUpResponseDTO;
 import com.demo.springbootproject.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
 @CrossOrigin(origins = "http://localhost:4200")
+@RestController
 public class UserController {
 
     private final UserService userService; // controller to service
@@ -21,6 +20,11 @@ public class UserController {
     public SignUpResponseDTO signup(@Valid @RequestBody SignUpRequestDTO signUpRequestDTO) {
         return userService.saveUser(signUpRequestDTO);
     }
+
+    @GetMapping("/")
+        public String test() {
+            return "Spring Boot is working!";
+        }
 }
 
 

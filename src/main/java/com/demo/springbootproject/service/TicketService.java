@@ -1,5 +1,9 @@
 package com.demo.springbootproject.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.demo.springbootproject.Entity.TicketEntity;
@@ -27,10 +31,35 @@ private TicketEntity createTicketEntity(TicketRequestDTO ticketRequest) {
     ticketEntity.setDescription(ticketRequest.getDescription());
     ticketEntity.setTicketPriority(ticketRequest.getTicketPriority());
     ticketEntity.setCreatedBy(ticketRequest.getCreatedBy()); //JWT
+    ticketEntity.setCreatedAt(LocalDateTime.now());
+    ticketEntity.setUpdatedAt(null);
     ticketEntity.setTicketStatus(TicketStatus.OPEN);
 
     return ticketEntity;
 }
+
+    public List<TicketResponseDTO> getAllTickets(){
+        List<TicketEntity> tickets = ticketRepository.findAll(); //this will return the ticketentity from the database, not rsponsedto
+        List<TicketResponseDTO> responses = new ArrayList<>();
+
+        for (TicketEntity ticket : tickets) {
+
+            TicketResponseDTO response = new TicketResponseDTO
+                (
+                    ticket.getId(),
+                    ticket.getTitle(),
+                    ticket.getDescription(),
+                    ticket.getTicketStatus(),
+                    ticket.getTicketPriority(),
+                    ticket.getCreatedBy(),
+                    ticket.getCreatedAt(),
+                    ticket.getUpdatedAt()
+                );
+            responses.add(response);
+        }
+
+        return responses;
+    }
 
     public TicketResponseDTO createTicket(TicketRequestDTO ticketRequest) {
 

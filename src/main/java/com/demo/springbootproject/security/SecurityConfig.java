@@ -40,7 +40,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/signup",
                                 "/auth/login",
-                                "/ticket"
+                                "/ticket",
+                                "/"
 
                         ).permitAll()
 
