@@ -21,10 +21,13 @@ public class TicketService {
 
     private final TicketRepository ticketRepository;
 
+    private Long getCurrentUserId() {
+
     Authentication authentication =
             SecurityContextHolder.getContext().getAuthentication();
 
-    Long userId = (Long) authentication.getPrincipal();
+    return (Long) authentication.getPrincipal();
+}
 
     public TicketService(TicketRepository ticketRepository) {
         this.ticketRepository = ticketRepository; 
@@ -46,7 +49,7 @@ public class TicketService {
         ticketEntity.setTitle(ticketRequest.getTitle());
         ticketEntity.setDescription(ticketRequest.getDescription());
         ticketEntity.setTicketPriority(ticketRequest.getTicketPriority());
-        ticketEntity.setCreatedBy(this.userId);
+        ticketEntity.setCreatedBy(getCurrentUserId());
         ticketEntity.setTicketStatus(TicketStatus.OPEN);
 
         return ticketEntity;
@@ -132,7 +135,7 @@ public class TicketService {
         ticket.setTicketStatus(ticketRequest.getTicketStatus());
     }
 
-    ticket.setUpdatedBy(this.userId);
+    ticket.setUpdatedBy(getCurrentUserId());
     ticket.getUpdatedAt();
    }
 
