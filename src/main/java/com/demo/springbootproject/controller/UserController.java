@@ -5,6 +5,7 @@ import com.demo.springbootproject.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class UserController {
 

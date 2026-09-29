@@ -28,6 +28,7 @@ public class JwtService {
 
         return Jwts.builder()
                 .subject(user.getEmail())
+                .claim("userId", user.getId())
                 .issuedAt(now)
                 .expiration(expiry)
                 .signWith(secretKey)
@@ -40,8 +41,17 @@ public class JwtService {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
-                .getSubject();
+                .get("name", String.class);
     }
+
+   public Long extractUserId(String token) {
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("userId", Long.class);
+        }
 
     public boolean validateToken(String token) {
         try {

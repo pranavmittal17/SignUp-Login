@@ -37,7 +37,8 @@ public class SecurityConfig {
                         // Public APIs
                         .requestMatchers(
                                 "/signup",
-                                "/auth/login"
+                                "/auth/login",
+                                "/ticket/**"
                         ).permitAll()
 
                         // Everything else requires JWT
@@ -52,4 +53,5 @@ public class SecurityConfig {
 
         return http.build();
     }
+    
 }

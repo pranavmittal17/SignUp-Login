@@ -48,7 +48,9 @@ public class TicketEntity {
     @Enumerated(EnumType.STRING)
     private TicketPriority ticketPriority;
 
-    private String createdBy;
+    private Long createdBy;
+
+    private Long updatedBy;
     
     @CreatedDate
     private LocalDateTime createdAt;

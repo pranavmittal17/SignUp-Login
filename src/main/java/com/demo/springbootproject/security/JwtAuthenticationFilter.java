@@ -43,12 +43,12 @@ public class JwtAuthenticationFilter
 
         if (jwtService.validateToken(token)) {
 
-            String username =
-                    jwtService.extractUsername(token);
-
+        //     String username =
+        //             jwtService.extractUsername(token);
+             Long userId = jwtService.extractUserId(token);
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(
-                            username,
+                            userId,
                             null,
                             Collections.emptyList()
                     );
