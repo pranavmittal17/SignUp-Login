@@ -1,5 +1,7 @@
 package com.demo.springbootproject.dto;
+
 import com.demo.springbootproject.enums.TicketPriority;
+import com.demo.springbootproject.enums.TicketStatus;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -7,8 +9,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter 
-@Setter 
+@Getter
+@Setter
 public class TicketRequestDTO {
 
     @NotBlank(message = "Title is required")
@@ -21,6 +23,8 @@ public class TicketRequestDTO {
     @NotNull(message = "Priority is required")
     private TicketPriority ticketPriority;
 
+    private TicketStatus ticketStatus;
+
     @NotBlank(message = "CreatedBy is required")
-    private String createdBy;
+    private Long createdBy;
 }
