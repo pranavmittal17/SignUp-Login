@@ -27,8 +27,7 @@ public class JwtService {
         Date expiry = new Date(System.currentTimeMillis() + 1000L * 60 * 60); // shift time to config.
 
         return Jwts.builder()
-                .subject(user.getEmail())
-                .claim("userId", user.getId())
+                .subject(user.getUsername())
                 .issuedAt(now)
                 .expiration(expiry)
                 .signWith(secretKey)
@@ -41,17 +40,17 @@ public class JwtService {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
-                .get("name", String.class);
+                .getSubject();
     }
 
-   public Long extractUserId(String token) {
-        return Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .get("userId", Long.class);
-        }
+//    public Long extractUserId(String token) {
+//         return Jwts.parser()
+//                 .verifyWith(secretKey)
+//                 .build()
+//                 .parseSignedClaims(token)
+//                 .getPayleoad()
+//                 .get("userId", Long.class);
+//         }
 
     public boolean validateToken(String token) {
         try {

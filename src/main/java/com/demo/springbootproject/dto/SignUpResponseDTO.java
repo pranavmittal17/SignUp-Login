@@ -16,6 +16,7 @@ public class SignUpResponseDTO {
     private String firstName;
     private String lastName;
     private String middleName;
+    private String username;
     private String phoneNo;
     private String email;
 
@@ -23,12 +24,13 @@ public class SignUpResponseDTO {
     private UserRole userRole;
 
 
-    public SignUpResponseDTO(Long id, Long employeeId,String firstName,  String middleName, String lastName, String phoneNo, String email,String designation, UserRole userRole, LocalDateTime createdAt) {
+    public SignUpResponseDTO(Long id, Long employeeId,String firstName,  String middleName, String lastName, String username,String phoneNo, String email,String designation, UserRole userRole, LocalDateTime createdAt) {
         this.id = id;
         this.employeeId = employeeId;
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
+        this.username = username;
         this.phoneNo = phoneNo;
         this.email = email;
         this.designation= designation;

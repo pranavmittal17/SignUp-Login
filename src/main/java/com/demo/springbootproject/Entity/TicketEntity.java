@@ -53,10 +53,12 @@ public class TicketEntity {
     @CreatedDate
     private LocalDateTime createdAt;
 
+    private String updatedBy;
+
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-
+    
 }
 
 

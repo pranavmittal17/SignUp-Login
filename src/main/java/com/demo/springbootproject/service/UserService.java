@@ -21,6 +21,11 @@ public class UserService {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
+    private String generateUsername(UserEntity user) {
+    return user.getFirstName().toLowerCase()
+            + "."
+            + user.getEmployeeId();
+}
 
     public SignUpResponseDTO saveUser(SignUpRequestDTO signUpRequestDTO) {
         UserEntity user = new UserEntity();
@@ -38,6 +43,8 @@ public class UserService {
         user.setFirstName(signUpRequestDTO.getFirstName());
         user.setLastName(signUpRequestDTO.getLastName());
         user.setMiddleName(signUpRequestDTO.getMiddleName());
+         
+        user.setUsername(generateUsername(user));        
         user.setPhoneNo(signUpRequestDTO.getPhoneNo());
         user.setDesignation(signUpRequestDTO.getDesignation());
         user.setUserRole(signUpRequestDTO.getUserRole());
@@ -54,6 +61,7 @@ public class UserService {
         savedUser.getEmployeeId(),
         savedUser.getFirstName(),
         savedUser.getMiddleName(),
+        savedUser.getUsername(),
         savedUser.getLastName(),
         savedUser.getPhoneNo(),
         savedUser.getEmail(),

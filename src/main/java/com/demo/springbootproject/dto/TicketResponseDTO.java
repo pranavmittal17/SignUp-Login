@@ -17,11 +17,9 @@ public class TicketResponseDTO {
     private String description;
     private TicketStatus ticketStatus;
     private TicketPriority ticketPriority;
-
-    private Long createdBy;
-    private Long updatedBy;
-
+    private String createdBy;
     private LocalDateTime createdAt;
+    private String updatedBy;
     private LocalDateTime updatedAt;
 
     public TicketResponseDTO(
@@ -30,9 +28,9 @@ public class TicketResponseDTO {
             String description,
             TicketStatus ticketStatus,
             TicketPriority ticketPriority,
-            Long createdBy,
-            Long updatedBy,
+            String createdBy,
             LocalDateTime createdAt,
+            String updatedBy,
             LocalDateTime updatedAt) {
 
         this.id = id;
@@ -41,8 +39,8 @@ public class TicketResponseDTO {
         this.ticketStatus = ticketStatus;
         this.ticketPriority = ticketPriority;
         this.createdBy = createdBy;
-        this.updatedBy = updatedBy;
         this.createdAt = createdAt;
+        this.updatedBy = updatedBy;
         this.updatedAt = updatedAt;
     }
 }

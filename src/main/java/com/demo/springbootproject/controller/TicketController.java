@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -20,7 +21,7 @@ import com.demo.springbootproject.service.TicketService;
 
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestParam;
-
+@CrossOrigin(origins="http://localhost:4200")
 @RestController
 @RequestMapping("/tickets")
 public class TicketController {
@@ -37,7 +38,7 @@ public class TicketController {
     }
 
     @PostMapping
-    public TicketResponseDTO ticket(
+    public TicketResponseDTO createTicket(
             @Valid @RequestBody TicketRequestDTO ticketRequestDTO) {
 
         return ticketService.createTicket(ticketRequestDTO);

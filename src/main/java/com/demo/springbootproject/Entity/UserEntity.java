@@ -3,6 +3,7 @@ import java.time.LocalDateTime;
 
 import com.demo.springbootproject.enums.UserRole;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -34,11 +35,17 @@ public class UserEntity {
 
     @NotBlank
     private String lastName;
+    
 
     private String middleName;
 
+    @Column(unique = true, nullable = false)
+    private String username;
+
     @NotBlank 
     private String phoneNo;
+
+
 
     @NotBlank
     @Email

@@ -25,6 +25,8 @@ public class SecurityConfig {
         http
                 // Disable CSRF because we are building a REST API
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> {})
+
 
                 // JWT is stateless, so don't create HTTP sessions
                 .sessionManagement(session ->
@@ -40,13 +42,11 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/signup",
                                 "/auth/login",
-                                "/ticket",
+                                // "/tickets",
                                 "/"
 
-                        ).permitAll()
+                        ).permitAll().anyRequest().authenticated()                        // Everything else requires JWT
 
-                        // Everything else requires JWT
-                        .anyRequest().authenticated()
                 )
 
                 // Run our JWT filter before Spring's authentication filter
