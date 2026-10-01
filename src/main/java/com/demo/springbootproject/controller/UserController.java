@@ -11,7 +11,7 @@ public class UserController {
 
     private final UserService userService; // controller to service
 
-    //QAutowired
+    //QAutowired 
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -20,6 +20,11 @@ public class UserController {
     public SignUpResponseDTO signup(@Valid @RequestBody SignUpRequestDTO signUpRequestDTO) {
         return userService.saveUser(signUpRequestDTO);
     }
+
+    @GetMapping("/")
+        public String test() {
+            return "Spring Boot is working!";
+        }
 }
 
 

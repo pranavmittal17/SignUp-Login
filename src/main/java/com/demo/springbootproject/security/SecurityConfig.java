@@ -16,6 +16,8 @@ public class SecurityConfig {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
+    //let localhost 4200 be allowed
+
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http) throws Exception {
@@ -23,6 +25,8 @@ public class SecurityConfig {
         http
                 // Disable CSRF because we are building a REST API
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> {})
+
 
                 // JWT is stateless, so don't create HTTP sessions
                 .sessionManagement(session ->
@@ -38,11 +42,11 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/signup",
                                 "/auth/login",
-                                "/ticket/**"
-                        ).permitAll()
+                                // "/tickets",
+                                "/"
 
-                        // Everything else requires JWT
-                        .anyRequest().authenticated()
+                        ).permitAll().anyRequest().authenticated()                        // Everything else requires JWT
+
                 )
 
                 // Run our JWT filter before Spring's authentication filter

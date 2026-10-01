@@ -25,6 +25,4 @@ public class TicketRequestDTO {
 
     private TicketStatus ticketStatus;
 
-    @NotBlank(message = "CreatedBy is required")
-    private Long createdBy;
 }

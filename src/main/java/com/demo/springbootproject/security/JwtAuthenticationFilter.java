@@ -28,8 +28,7 @@ public class JwtAuthenticationFilter
             FilterChain filterChain)
             throws ServletException, IOException {
 
-        String authHeader =
-                request.getHeader("Authorization");
+        String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null ||
                 !authHeader.startsWith("Bearer ")) {
@@ -43,12 +42,11 @@ public class JwtAuthenticationFilter
 
         if (jwtService.validateToken(token)) {
 
-        //     String username =
-        //             jwtService.extractUsername(token);
-             Long userId = jwtService.extractUserId(token);
-            UsernamePasswordAuthenticationToken authentication =
+             String username = jwtService.extractUsername(token);
+             //Long userId = jwtService.extractUserId(token);
+             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(
-                            userId,
+                            username,
                             null,
                             Collections.emptyList()
                     );

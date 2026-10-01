@@ -1,4 +1,8 @@
 package com.demo.springbootproject.service;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -17,17 +21,19 @@ import com.demo.springbootproject.exception.ResourceNotFoundException;
 @Service
 public class TicketService {
 
-    //private final UserRepository userRepository;
-
-    private final TicketRepository ticketRepository;
-
-    private Long getCurrentUserId() {
-
+    private String getCurrentUsername() {
     Authentication authentication =
             SecurityContextHolder.getContext().getAuthentication();
 
-    return (Long) authentication.getPrincipal();
-}
+    return authentication.getName();
+    }
+
+    private final TicketRepository ticketRepository;
+
+    // Authentication authentication =
+    //         SecurityContextHolder.getContext().getAuthentication();
+
+    // Long userId = (Long) authentication.getPrincipal();
 
     public TicketService(TicketRepository ticketRepository) {
         this.ticketRepository = ticketRepository; 
@@ -49,72 +55,96 @@ public class TicketService {
         ticketEntity.setTitle(ticketRequest.getTitle());
         ticketEntity.setDescription(ticketRequest.getDescription());
         ticketEntity.setTicketPriority(ticketRequest.getTicketPriority());
-        ticketEntity.setCreatedBy(getCurrentUserId());
-        ticketEntity.setTicketStatus(TicketStatus.OPEN);
-
-        return ticketEntity;
-    }
-
- public TicketResponseDTO createTicket(TicketRequestDTO ticketRequest) {
-
-    TicketEntity ticketEntity = createTicketEntity(ticketRequest);
-
-    TicketEntity savedTicket = ticketRepository.save(ticketEntity);
-
-    return new TicketResponseDTO(
-            savedTicket.getId(),
-            savedTicket.getTitle(),
-            savedTicket.getDescription(),
-            savedTicket.getTicketStatus(),
-            savedTicket.getTicketPriority(),
-            savedTicket.getCreatedBy(),
-            savedTicket.getUpdatedBy(),
-            savedTicket.getCreatedAt(),
-            savedTicket.getUpdatedAt()
-    );
+        ticketEntity.setCreatedBy(getCurrentUsername());    
+    return ticketEntity;
 }
 
-    public TicketResponseDTO getTicketById(Long id) {
+    public List<TicketResponseDTO> getAllTickets(){
+        List<TicketEntity> tickets = ticketRepository.findAll(); //this will return the ticketentity from the database, not rsponsedto
+        List<TicketResponseDTO> responses = new ArrayList<>();
 
-    TicketEntity ticket = findTicketById(id);
+        for (TicketEntity ticket : tickets) {
 
-    return new TicketResponseDTO(
+        TicketResponseDTO response = new TicketResponseDTO(
             ticket.getId(),
             ticket.getTitle(),
             ticket.getDescription(),
             ticket.getTicketStatus(),
             ticket.getTicketPriority(),
             ticket.getCreatedBy(),
-            ticket.getUpdatedBy(),
             ticket.getCreatedAt(),
+            ticket.getUpdatedBy(),
             ticket.getUpdatedAt()
-    );
-}
+        );
 
-   public TicketResponseDTO updateTicket( Long id, TicketRequestDTO ticketRequest) {
+        responses.add(response);
+    }
 
-   TicketEntity ticket = findTicketById(id);
-    validateAndAssignvalues( ticket, ticketRequest);
-    TicketEntity updatedTicket = ticketRepository.save(ticket);
+    return responses;}
 
-    return new TicketResponseDTO(
-            updatedTicket.getId(),
-            updatedTicket.getTitle(),
-            updatedTicket.getDescription(),
-            updatedTicket.getTicketStatus(),
-            updatedTicket.getTicketPriority(),
-            updatedTicket.getCreatedBy(),
-            updatedTicket.getUpdatedBy(),
-            updatedTicket.getCreatedAt(),
-            updatedTicket.getUpdatedAt()
-    );
-}
+    public TicketResponseDTO createTicket(TicketRequestDTO ticketRequest) {
 
-     public void deleteTicket(Long id) {
+        TicketEntity ticketEntity = createTicketEntity(ticketRequest);
+
+        TicketEntity savedTicket = ticketRepository.save(ticketEntity);
+
+        return new TicketResponseDTO(
+                savedTicket.getId(),
+                savedTicket.getTitle(),
+                savedTicket.getDescription(),
+                savedTicket.getTicketStatus(),
+                savedTicket.getTicketPriority(),
+                savedTicket.getCreatedBy(),
+                savedTicket.getCreatedAt(),
+                savedTicket.getUpdatedBy(),
+                savedTicket.getUpdatedAt()
+        );
+    }
+
+    public TicketResponseDTO getTicketById(Long id) {
+
+        TicketEntity ticket = findTicketById(id);
+
+        return new TicketResponseDTO(
+                ticket.getId(),
+                ticket.getTitle(),
+                ticket.getDescription(),
+                ticket.getTicketStatus(),
+                ticket.getTicketPriority(),
+                ticket.getCreatedBy(),
+                ticket.getCreatedAt(),
+                ticket.getUpdatedBy(),
+                ticket.getUpdatedAt()
+        );
+    }
+
+    public TicketResponseDTO updateTicket( Long id, TicketRequestDTO ticketRequest) {
+
+        TicketEntity ticket = findTicketById(id);
+            validateAndAssignvalues( ticket, ticketRequest);
+            ticket.setUpdatedBy(getCurrentUsername());
+            TicketEntity updatedTicket = ticketRepository.save(ticket);
+
+
+            return new TicketResponseDTO(
+                    updatedTicket.getId(),
+                    updatedTicket.getTitle(),
+                    updatedTicket.getDescription(),
+                    updatedTicket.getTicketStatus(),
+                    updatedTicket.getTicketPriority(),
+                    updatedTicket.getCreatedBy(),
+                    updatedTicket.getCreatedAt(),
+                    updatedTicket.getUpdatedBy(),
+                    updatedTicket.getUpdatedAt()
+            );
+    }
+
+    public void deleteTicket(Long id) {
         TicketEntity ticket = findTicketById(id);
 
         ticketRepository.delete(ticket);
     }
+
 
     //helper methods
 
@@ -134,9 +164,7 @@ public class TicketService {
     if (ticketRequest.getTicketStatus() != null) {
         ticket.setTicketStatus(ticketRequest.getTicketStatus());
     }
-
-    ticket.setUpdatedBy(getCurrentUserId());
-    ticket.getUpdatedAt();
-   }
-
+    }
 }
+
+
