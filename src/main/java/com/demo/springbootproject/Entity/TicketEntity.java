@@ -42,7 +42,7 @@ public class TicketEntity {
 
 
     @Enumerated(EnumType.STRING)
-    private TicketStatus ticketStatus = TicketStatus.OPEN;
+    private TicketStatus ticketStatus ;
 
 
     @Enumerated(EnumType.STRING)

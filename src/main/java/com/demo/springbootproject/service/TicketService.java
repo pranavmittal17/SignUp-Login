@@ -55,7 +55,10 @@ public class TicketService {
         ticketEntity.setTitle(ticketRequest.getTitle());
         ticketEntity.setDescription(ticketRequest.getDescription());
         ticketEntity.setTicketPriority(ticketRequest.getTicketPriority());
-        ticketEntity.setCreatedBy(getCurrentUsername());    
+        ticketEntity.setTicketStatus(ticketRequest.getTicketStatus());
+        ticketEntity.setCreatedBy(getCurrentUsername()); 
+        ticketEntity.setCreatedAt(LocalDateTime.now());
+
     return ticketEntity;
 }
 
@@ -164,6 +167,8 @@ public class TicketService {
     if (ticketRequest.getTicketStatus() != null) {
         ticket.setTicketStatus(ticketRequest.getTicketStatus());
     }
+    ticket.setUpdatedBy(getCurrentUsername());
+    ticket.setUpdatedAt(LocalDateTime.now());
     }
 }
 
