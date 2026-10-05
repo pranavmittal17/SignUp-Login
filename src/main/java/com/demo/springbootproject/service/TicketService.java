@@ -3,6 +3,9 @@ package com.demo.springbootproject.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -14,12 +17,18 @@ import com.demo.springbootproject.Entity.TicketEntity;
 import com.demo.springbootproject.dto.TicketRequestDTO;
 import com.demo.springbootproject.dto.TicketResponseDTO;
 import com.demo.springbootproject.repository.TicketRepository;
+
+import lombok.extern.slf4j.Slf4j;
+
 import com.demo.springbootproject.enums.TicketStatus;
 import com.demo.springbootproject.exception.ResourceNotFoundException;
 
 
 @Service
+@Slf4j 
 public class TicketService {
+
+
 
     private String getCurrentUsername() {
     Authentication authentication =
@@ -59,13 +68,10 @@ public class TicketService {
     return ticketEntity;
 }
 
-    public List<TicketResponseDTO> getAllTickets(){
-        List<TicketEntity> tickets = ticketRepository.findAll(); //this will return the ticketentity from the database, not rsponsedto
-        List<TicketResponseDTO> responses = new ArrayList<>();
-
-        for (TicketEntity ticket : tickets) {
-
-        TicketResponseDTO response = new TicketResponseDTO(
+    public Page<TicketResponseDTO> findAllTickets(Pageable pageable){
+        Page<TicketEntity> tickets = ticketRepository.findAllTickets(pageable); //this will return the ticketentity from the database, not rsponsedto
+        
+        return tickets.map(ticket -> new TicketResponseDTO(
             ticket.getId(),
             ticket.getTitle(),
             ticket.getDescription(),
@@ -75,12 +81,9 @@ public class TicketService {
             ticket.getCreatedAt(),
             ticket.getUpdatedBy(),
             ticket.getUpdatedAt()
-        );
-
-        responses.add(response);
+        
+        ));
     }
-
-    return responses;}
 
     public TicketResponseDTO createTicket(TicketRequestDTO ticketRequest) {
 

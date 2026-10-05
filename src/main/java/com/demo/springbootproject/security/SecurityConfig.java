@@ -42,7 +42,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/signup",
                                 "/auth/login",
-                                // "/tickets",
+                                "/tickets",
                                 "/"
 
                         ).permitAll().anyRequest().authenticated()                        // Everything else requires JWT
