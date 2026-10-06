@@ -21,6 +21,7 @@ public class TicketResponseDTO {
     private LocalDateTime createdAt;
     private String updatedBy;
     private LocalDateTime updatedAt;
+    private String assignedTo;
 
     public TicketResponseDTO(
             Long id,
@@ -31,7 +32,8 @@ public class TicketResponseDTO {
             String createdBy,
             LocalDateTime createdAt,
             String updatedBy,
-            LocalDateTime updatedAt) {
+            LocalDateTime updatedAt,
+            String assignedTo){
 
         this.id = id;
         this.title = title;
@@ -42,5 +44,6 @@ public class TicketResponseDTO {
         this.createdAt = createdAt;
         this.updatedBy = updatedBy;
         this.updatedAt = updatedAt;
+        this.assignedTo = assignedTo;
     }
 }

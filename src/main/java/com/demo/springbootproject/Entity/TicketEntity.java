@@ -58,7 +58,7 @@ public class TicketEntity {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    // private String assignedTo;
+    private String assignedTo;
 
     
 }

@@ -29,7 +29,7 @@ public class TicketController {
 
     @GetMapping
     public Page<TicketResponseDTO> findAllTickets(@PageableDefault(size = 10) Pageable pageable) {
-        return ticketService.findAllTickets(pageable);
+        return ticketService.findAllTickets(pageable); //based on latest updates show the tickets, if not latest then use the create option 
     }
 
     @PostMapping

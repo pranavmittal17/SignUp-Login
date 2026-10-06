@@ -25,4 +25,6 @@ public class TicketRequestDTO {
 
     private TicketStatus ticketStatus;
 
+    private String assignedTo;
+
 }
