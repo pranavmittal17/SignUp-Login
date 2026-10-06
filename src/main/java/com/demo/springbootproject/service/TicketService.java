@@ -1,35 +1,22 @@
 package com.demo.springbootproject.service;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
 import com.demo.springbootproject.Entity.TicketEntity;
 import com.demo.springbootproject.dto.TicketRequestDTO;
 import com.demo.springbootproject.dto.TicketResponseDTO;
 import com.demo.springbootproject.repository.TicketRepository;
+import com.demo.springbootproject.repository.UserRepository;
 
 import lombok.extern.slf4j.Slf4j;
-
-import com.demo.springbootproject.enums.TicketStatus;
 import com.demo.springbootproject.exception.ResourceNotFoundException;
 
 
 @Service
 @Slf4j 
 public class TicketService {
-
-
-
     private String getCurrentUsername() {
     Authentication authentication =
             SecurityContextHolder.getContext().getAuthentication();
@@ -38,14 +25,16 @@ public class TicketService {
     }
 
     private final TicketRepository ticketRepository;
+    private final UserRepository userRepository;
 
     // Authentication authentication =
     //         SecurityContextHolder.getContext().getAuthentication();
 
     // Long userId = (Long) authentication.getPrincipal();
 
-    public TicketService(TicketRepository ticketRepository) {
+    public TicketService(TicketRepository ticketRepository, UserRepository userRepository) {
         this.ticketRepository = ticketRepository; 
+        this.userRepository = userRepository;
     }
 
     private TicketEntity findTicketById(Long id) {
@@ -64,10 +53,21 @@ public class TicketService {
         ticketEntity.setTitle(ticketRequest.getTitle());
         ticketEntity.setDescription(ticketRequest.getDescription());
         ticketEntity.setTicketPriority(ticketRequest.getTicketPriority());
-        ticketEntity.setTicketStatus(ticketRequest.getTicketStatus());
-        ticketEntity.setCreatedBy(getCurrentUsername()); 
-        ticketEntity.setCreatedAt(LocalDateTime.now());
+        ticketEntity.setCreatedBy(getCurrentUsername());    
 
+        if ((ticketRequest.getAssignedTo() != null &&!ticketRequest.getAssignedTo().isBlank())) 
+            {     
+                userRepository.findByUsername(ticketRequest.getAssignedTo())
+                .orElseThrow(
+                    () -> new ResourceNotFoundException("Assigned user not found: "
+                + ticketRequest.getAssignedTo())
+                );
+                ticketEntity.setAssignedTo(ticketRequest.getAssignedTo());
+            }
+        else 
+            {
+                ticketEntity.setAssignedTo(getCurrentUsername());
+            }
     return ticketEntity;
 }
 
@@ -83,7 +83,8 @@ public class TicketService {
             ticket.getCreatedBy(),
             ticket.getCreatedAt(),
             ticket.getUpdatedBy(),
-            ticket.getUpdatedAt()
+            ticket.getUpdatedAt(),
+            ticket.getAssignedTo()
         
         ));
     }
@@ -103,7 +104,8 @@ public class TicketService {
                 savedTicket.getCreatedBy(),
                 savedTicket.getCreatedAt(),
                 savedTicket.getUpdatedBy(),
-                savedTicket.getUpdatedAt()
+                savedTicket.getUpdatedAt(),
+                savedTicket.getAssignedTo()
         );
     }
 
@@ -120,7 +122,8 @@ public class TicketService {
                 ticket.getCreatedBy(),
                 ticket.getCreatedAt(),
                 ticket.getUpdatedBy(),
-                ticket.getUpdatedAt()
+                ticket.getUpdatedAt(),
+                ticket.getAssignedTo()
         );
     }
 
@@ -141,7 +144,8 @@ public class TicketService {
                     updatedTicket.getCreatedBy(),
                     updatedTicket.getCreatedAt(),
                     updatedTicket.getUpdatedBy(),
-                    updatedTicket.getUpdatedAt()
+                    updatedTicket.getUpdatedAt(),
+                    updatedTicket.getAssignedTo()
             );
     }
 
