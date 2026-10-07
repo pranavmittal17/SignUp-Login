@@ -1,5 +1,8 @@
 package com.demo.springbootproject.service;
 import org.springframework.data.domain.Pageable;
+
+import java.time.LocalDateTime;
+
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -95,6 +98,12 @@ public class TicketService {
 
         TicketEntity savedTicket = ticketRepository.save(ticketEntity);
 
+        log.info(
+            "Ticket created successfully. ticketId={}, createdBy={}, assignedTo={}",
+            savedTicket.getId(),
+            savedTicket.getCreatedBy(),
+            savedTicket.getAssignedTo()
+        );
         return new TicketResponseDTO(
                 savedTicket.getId(),
                 savedTicket.getTitle(),
@@ -133,7 +142,13 @@ public class TicketService {
             validateAndAssignvalues( ticket, ticketRequest);
             ticket.setUpdatedBy(getCurrentUsername());
             TicketEntity updatedTicket = ticketRepository.save(ticket);
-
+            
+            log.info(
+                "Ticket updated successfully. ticketId={}, updatedBy={}, assignedTo={}",
+                updatedTicket.getId(),
+                updatedTicket.getUpdatedBy(),
+                updatedTicket.getAssignedTo()
+            );
 
             return new TicketResponseDTO(
                     updatedTicket.getId(),
@@ -151,7 +166,13 @@ public class TicketService {
 
     public void deleteTicket(Long id) {
         TicketEntity ticket = findTicketById(id);
+        ticketRepository.delete(ticket);
 
+        log.info(
+            "Ticket deleted successfully. ticketId={}, deletedBy={}",
+            id,
+            getCurrentUsername()
+        );
         ticketRepository.delete(ticket);
     }
 
