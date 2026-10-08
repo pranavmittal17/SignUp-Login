@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -64,6 +65,14 @@ public class TicketController {
         log.debug("Received request to fetch ticket. ticketId={}", id);
 
         return ticketService.getTicketById(id);
+    }
+
+        @GetMapping("/search")
+    public Page<TicketResponseDTO> searchTickets(
+            @RequestParam String query,
+            @PageableDefault(size = 10) Pageable pageable) {
+
+        return ticketService.searchTickets(query, pageable);
     }
 
     // UPDATE

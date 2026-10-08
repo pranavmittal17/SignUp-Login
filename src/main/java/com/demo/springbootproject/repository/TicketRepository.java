@@ -13,8 +13,33 @@ public interface TicketRepository extends JpaRepository<TicketEntity, Long> {
     Optional<TicketEntity> findById(Long id);
 
     @Query("SELECT t FROM TicketEntity t")
-    Page<TicketEntity> findAllTickets(Pageable pageable);
+    Page<TicketEntity> getAllTickets(Pageable pageable);
 
     @Query("SELECT t FROM TicketEntity t WHERE t.assignedTo = :username ")
     Page<TicketEntity> getMyTickets(Pageable pageable, @Param("username") String username );
+
+
+     @Query(value = """
+        SELECT *
+        FROM ticket_entity
+        WHERE CAST(id AS CHAR) LIKE CONCAT('%', :query, '%')
+           OR LOWER(title) LIKE LOWER(CONCAT('%', :query, '%'))
+           OR LOWER(description) LIKE LOWER(CONCAT('%', :query, '%'))
+           OR LOWER(ticket_status) LIKE LOWER(CONCAT('%', :query, '%'))
+           OR LOWER(ticket_priority) LIKE LOWER(CONCAT('%', :query, '%'))
+        """,
+        countQuery = """
+        SELECT COUNT(*)
+        FROM ticket_entity
+        WHERE CAST(id AS CHAR) LIKE CONCAT('%', :query, '%')
+           OR LOWER(title) LIKE LOWER(CONCAT('%', :query, '%'))
+           OR LOWER(description) LIKE LOWER(CONCAT('%', :query, '%'))
+           OR LOWER(ticket_status) LIKE LOWER(CONCAT('%', :query, '%'))
+           OR LOWER(ticket_priority) LIKE LOWER(CONCAT('%', :query, '%'))
+        """,
+        nativeQuery = true)
+    Page<TicketEntity> searchTickets(
+            @Param("query") String query,
+            Pageable pageable
+    );
 }

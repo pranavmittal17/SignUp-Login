@@ -25,7 +25,26 @@ public class UserService {
     return user.getFirstName().toLowerCase()
             + "."
             + user.getEmployeeId();
-}
+    }
+
+    public SignUpResponseDTO getUserByUsername(String username) {
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return new SignUpResponseDTO(
+                user.getId(),
+                user.getEmployeeId(),
+                user.getFirstName(),
+                user.getMiddleName(),
+                user.getLastName(),
+                user.getUsername(),
+                user.getPhoneNo(),
+                user.getEmail(),
+                user.getDesignation(),
+                user.getUserRole(),
+                user.getCreatedAt()
+        );
+    }
 
     public SignUpResponseDTO saveUser(SignUpRequestDTO signUpRequestDTO) {
         UserEntity user = new UserEntity();
@@ -61,8 +80,8 @@ public class UserService {
         savedUser.getEmployeeId(),
         savedUser.getFirstName(),
         savedUser.getMiddleName(),
-        savedUser.getUsername(),
         savedUser.getLastName(),
+        savedUser.getUsername(),
         savedUser.getPhoneNo(),
         savedUser.getEmail(),
         savedUser.getDesignation(),

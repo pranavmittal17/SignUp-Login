@@ -4,16 +4,20 @@ import com.demo.springbootproject.dto.SignUpResponseDTO;
 import com.demo.springbootproject.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
+
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class UserController {
 
     private final UserService userService; // controller to service
+   // private final AuthService authService;
 
     //QAutowired 
     public UserController(UserService userService) {
         this.userService = userService;
+       // this.authService = authService;
     }
 
     @PostMapping("/signup")
@@ -22,9 +26,15 @@ public class UserController {
     }
 
     @GetMapping("/")
-        public String test() {
-            return "Spring Boot is working!";
-        }
+    public String test() {
+        return "Spring Boot is working!";
+    }
+
+    @GetMapping("/profile")
+    public SignUpResponseDTO getProfile(Authentication authentication) {
+        return userService.getUserByUsername(authentication.getName());
+    }
+
 }
 
 

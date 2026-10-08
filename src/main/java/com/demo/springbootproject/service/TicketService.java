@@ -4,6 +4,9 @@ import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
 
 import org.springframework.data.domain.Page;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -14,6 +17,8 @@ import com.demo.springbootproject.repository.TicketRepository;
 import com.demo.springbootproject.repository.UserRepository;
 
 import lombok.extern.slf4j.Slf4j;
+
+import com.demo.springbootproject.enums.TicketStatus;
 import com.demo.springbootproject.exception.ResourceNotFoundException;
 
 
@@ -97,8 +102,9 @@ public class TicketService {
     return ticketEntity;
 }
 
-    public Page<TicketResponseDTO> findAllTickets(Pageable pageable){
-        Page<TicketEntity> tickets = ticketRepository.findAllTickets(pageable); //this will return the ticketentity from the database, not rsponsedto
+    
+    public Page<TicketResponseDTO> getAllTickets(Pageable pageable){
+        Page<TicketEntity> tickets = ticketRepository.getAllTickets(pageable); //this will return the ticketentity from the database, not rsponsedto
         
         return tickets.map(ticket -> new TicketResponseDTO(
             ticket.getId(),
@@ -111,9 +117,35 @@ public class TicketService {
             ticket.getUpdatedBy(),
             ticket.getUpdatedAt(),
             ticket.getAssignedTo()
+
         
         ));
     }
+
+    public Page<TicketResponseDTO> searchTickets(
+            String query,
+            Pageable pageable) {
+
+        Page<TicketEntity> tickets =
+                ticketRepository.searchTickets(query, pageable);
+
+        return tickets.map(ticket -> new TicketResponseDTO(
+                ticket.getId(),
+                ticket.getTitle(),
+                ticket.getDescription(),
+                ticket.getTicketStatus(),
+                ticket.getTicketPriority(),
+                ticket.getCreatedBy(),
+                ticket.getCreatedAt(),
+                ticket.getUpdatedBy(),
+                ticket.getUpdatedAt(),
+                ticket.getAssignedTo()
+        ));
+    }
+            
+        
+     
+    
 
     public TicketResponseDTO createTicket(TicketRequestDTO ticketRequest) {
 
