@@ -40,6 +40,11 @@ public class TicketController {
         return ticketService.findAllTickets(pageable); //based on latest updates show the tickets, if not latest then use the create option 
     
     }
+    @GetMapping("/my-tickets")
+    public Page<TicketResponseDTO> getMyTickets(Pageable pageable) {
+
+        return ticketService.getMyTickets(pageable);
+    }
 
     @PostMapping
     public TicketResponseDTO createTicket(

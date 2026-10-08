@@ -40,6 +40,27 @@ public class TicketService {
         this.userRepository = userRepository;
     }
 
+    public Page<TicketResponseDTO> getMyTickets(Pageable pageable) {
+
+        String username = getCurrentUsername();
+
+        Page<TicketEntity> tickets = ticketRepository.getMyTickets(pageable, username);
+        
+        return tickets.map(ticket -> new TicketResponseDTO(
+            ticket.getId(),
+            ticket.getTitle(),
+            ticket.getDescription(),
+            ticket.getTicketStatus(),
+            ticket.getTicketPriority(),
+            ticket.getCreatedBy(),
+            ticket.getCreatedAt(),
+            ticket.getUpdatedBy(),
+            ticket.getUpdatedAt(),
+            ticket.getAssignedTo()
+    ));
+}
+    
+
     private TicketEntity findTicketById(Long id) {
     return ticketRepository.findById(id)
             .orElseThrow(() ->
@@ -56,6 +77,8 @@ public class TicketService {
         ticketEntity.setTitle(ticketRequest.getTitle());
         ticketEntity.setDescription(ticketRequest.getDescription());
         ticketEntity.setTicketPriority(ticketRequest.getTicketPriority());
+        ticketEntity.setTicketStatus(ticketRequest.getTicketStatus());
+        log.info("STATUS SET ON ENTITY = {}", ticketEntity.getTicketStatus());
         ticketEntity.setCreatedBy(getCurrentUsername());    
 
         if ((ticketRequest.getAssignedTo() != null &&!ticketRequest.getAssignedTo().isBlank())) 
@@ -96,6 +119,7 @@ public class TicketService {
 
         TicketEntity ticketEntity = createTicketEntity(ticketRequest);
 
+        log.info("STATUS RECEIVED FROM REQUEST = {}", ticketRequest.getTicketStatus());
         TicketEntity savedTicket = ticketRepository.save(ticketEntity);
 
         log.info(
@@ -195,6 +219,9 @@ public class TicketService {
     if (ticketRequest.getTicketStatus() != null) {
         ticket.setTicketStatus(ticketRequest.getTicketStatus());
     }
+    if (ticketRequest.getAssignedTo() != null) {
+    ticket.setAssignedTo(ticketRequest.getAssignedTo());
+}
     ticket.setUpdatedBy(getCurrentUsername());
     ticket.setUpdatedAt(LocalDateTime.now());
     }
