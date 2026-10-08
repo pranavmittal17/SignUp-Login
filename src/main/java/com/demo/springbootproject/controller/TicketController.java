@@ -1,26 +1,22 @@
 package com.demo.springbootproject.controller;
-// package com.demo.springbootproject.service.TicketService;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import org.springframework.web.bind.annotation.PathVariable;
-
-import java.util.List;
-
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-
 import com.demo.springbootproject.dto.TicketRequestDTO;
 import com.demo.springbootproject.dto.TicketResponseDTO;
 import com.demo.springbootproject.service.TicketService;
 
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.RequestParam;
 @CrossOrigin(origins="http://localhost:4200")
 @RestController
 @RequestMapping("/tickets")
@@ -33,8 +29,8 @@ public class TicketController {
     }
 
     @GetMapping
-    public List<TicketResponseDTO> getAllTickets() {
-        return ticketService.getAllTickets();
+    public Page<TicketResponseDTO> findAllTickets(@PageableDefault(size = 10) Pageable pageable) {
+        return ticketService.findAllTickets(pageable);
     }
 
     @PostMapping
@@ -49,6 +45,14 @@ public class TicketController {
             @PathVariable Long id) {
 
         return ticketService.getTicketById(id);
+    }
+
+        @GetMapping("/search")
+    public Page<TicketResponseDTO> searchTickets(
+            @RequestParam String query,
+            @PageableDefault(size = 10) Pageable pageable) {
+
+        return ticketService.searchTickets(query, pageable);
     }
 
     // UPDATE
