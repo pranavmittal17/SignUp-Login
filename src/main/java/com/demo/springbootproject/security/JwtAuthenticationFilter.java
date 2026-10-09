@@ -2,6 +2,11 @@ package com.demo.springbootproject.security;
 
 import java.io.IOException;
 import java.util.Collections;
+import com.demo.springbootproject.Entity.UserSessionEntity;
+import com.demo.springbootproject.repository.UserSessionRepository;
+
+import java.time.LocalDateTime;
+import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -18,9 +23,16 @@ import jakarta.servlet.http.HttpServletResponse;
 public class JwtAuthenticationFilter
     extends OncePerRequestFilter {
         private final JwtService jwtService;
-        public JwtAuthenticationFilter(JwtService jwtService) {
-        this.jwtService = jwtService;
-    }
+        private final UserSessionRepository userSessionRepository;
+        @Value("${session.idle-timeout-minutes:30}")
+        private long idleTimeoutMinutes;
+
+        public JwtAuthenticationFilter(
+        JwtService jwtService,
+        UserSessionRepository userSessionRepository) {
+                this.jwtService = jwtService;
+                this.userSessionRepository = userSessionRepository;
+        }
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -37,25 +49,43 @@ public class JwtAuthenticationFilter
             return;
         }
 
-        String token =
-                authHeader.substring(7);
+        String token = authHeader.substring(7);
 
         if (jwtService.validateToken(token)) {
 
-             String username = jwtService.extractUsername(token);
-             //Long userId = jwtService.extractUserId(token);
-             UsernamePasswordAuthenticationToken authentication =
+    String tokenId = jwtService.extractTokenId(token);
+
+    UserSessionEntity session = userSessionRepository
+            .findByTokenId(tokenId)
+            .orElse(null);
+
+    if (session != null && session.getLogoutAt() == null) {
+
+        LocalDateTime now = LocalDateTime.now();
+
+        boolean idleExpired = session.getLastActivityAt()
+                .plusMinutes(idleTimeoutMinutes)
+                .isBefore(now);
+
+        if (!idleExpired && session.getExpiresAt().isAfter(now)) {
+
+            session.setLastActivityAt(now);
+            userSessionRepository.save(session);
+
+            String username = jwtService.extractUsername(token);
+
+            UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(
                             username,
                             null,
                             Collections.emptyList()
                     );
 
-            SecurityContextHolder
-                    .getContext()
+            SecurityContextHolder.getContext()
                     .setAuthentication(authentication);
         }
-
+    }
+}
         filterChain.doFilter(request, response);
     }
 }

@@ -14,6 +14,8 @@ public interface TicketRepository extends JpaRepository<TicketEntity, Long> {
 
     @Query("SELECT t FROM TicketEntity t")
     Page<TicketEntity> getAllTickets(Pageable pageable);
+    Page<TicketEntity> getAllTicketsById(Pageable pageable, Long id);
+
 
     @Query("SELECT t FROM TicketEntity t WHERE t.assignedTo = :username ")
     Page<TicketEntity> getMyTickets(Pageable pageable, @Param("username") String username );

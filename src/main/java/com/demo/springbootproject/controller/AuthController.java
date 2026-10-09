@@ -1,5 +1,5 @@
 package com.demo.springbootproject.controller;
-
+import jakarta.servlet.http.HttpServletRequest;
 import com.demo.springbootproject.dto.LoginRequestDTO;
 import com.demo.springbootproject.dto.LoginResponseDTO;
 import com.demo.springbootproject.service.AuthService;
@@ -29,9 +29,20 @@ public class AuthController {
             loginRequestDTO.getPassword()
         );
     }
-
-    @PostMapping("/logout")
-    public String logout() {
-        return "Logout successful";
-    }
 }
+
+    // @PostMapping("/logout")
+    // public String logout(HttpServletRequest request) {
+
+    //     String authHeader = request.getHeader("Authorization");
+
+    //     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+    //         throw new RuntimeException("Authorization token is missing");
+    //     }
+
+    //     String token = authHeader.substring(7);
+
+    //     authService.logout(token);
+
+//     return "Logout successful";
+// }

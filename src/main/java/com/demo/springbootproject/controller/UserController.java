@@ -4,7 +4,13 @@ import com.demo.springbootproject.dto.SignUpResponseDTO;
 import com.demo.springbootproject.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -29,6 +35,12 @@ public class UserController {
     public String test() {
         return "Spring Boot is working!";
     }
+
+    @GetMapping("/usernames")
+    public List<String> getAllUsernames() {
+        return userService.getAllUsernames();
+    }
+    
 
     @GetMapping("/profile")
     public SignUpResponseDTO getProfile(Authentication authentication) {

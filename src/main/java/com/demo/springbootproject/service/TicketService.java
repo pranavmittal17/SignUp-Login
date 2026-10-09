@@ -1,5 +1,6 @@
 package com.demo.springbootproject.service;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 
@@ -105,6 +106,25 @@ public class TicketService {
     
     public Page<TicketResponseDTO> getAllTickets(Pageable pageable){
         Page<TicketEntity> tickets = ticketRepository.getAllTickets(pageable); //this will return the ticketentity from the database, not rsponsedto
+        
+        return tickets.map(ticket -> new TicketResponseDTO(
+            ticket.getId(),
+            ticket.getTitle(),
+            ticket.getDescription(),
+            ticket.getTicketStatus(),
+            ticket.getTicketPriority(),
+            ticket.getCreatedBy(),
+            ticket.getCreatedAt(),
+            ticket.getUpdatedBy(),
+            ticket.getUpdatedAt(),
+            ticket.getAssignedTo()
+
+        
+        ));
+
+    }
+    public Page<TicketResponseDTO> getAllTicketsById(Pageable pageable, Long id){
+        Page<TicketEntity> tickets = ticketRepository.getAllTicketsById(pageable, id); //this will return the ticketentity from the database, not rsponsedto
         
         return tickets.map(ticket -> new TicketResponseDTO(
             ticket.getId(),

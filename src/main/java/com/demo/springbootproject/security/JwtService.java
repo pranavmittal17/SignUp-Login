@@ -8,7 +8,7 @@ import javax.crypto.SecretKey;
 import org.springframework.stereotype.Service;
 
 import com.demo.springbootproject.Entity.UserEntity;
-
+import java.util.UUID;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -25,8 +25,11 @@ public class JwtService {
     public String generateTokens(UserEntity user) {
         Date now = new Date();
         Date expiry = new Date(System.currentTimeMillis() + 1000L * 60 * 60); // shift time to config.
+        String tokenId = UUID.randomUUID().toString();
+// UUID.randomUUID() generates a unique identifier for each login.
 
         return Jwts.builder()
+                .id(tokenId) // .id(tokenId) puts that identifier into the JWT's jti claim.
                 .subject(user.getUsername())
                 .issuedAt(now)
                 .expiration(expiry)
@@ -42,6 +45,28 @@ public class JwtService {
                 .getPayload()
                 .getSubject();
     }
+
+// extractTokenId() retrieves it later so the backend can find the corresponding UserSessionEntity
+    
+    public String extractTokenId(String token) {
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getId();
+    }
+
+
+    public Date extractExpiration(String token) {
+        
+    return Jwts.parser()
+            .verifyWith(secretKey)
+            .build()
+            .parseSignedClaims(token)
+            .getPayload()
+            .getExpiration();
+}
 
 //    public Long extractUserId(String token) {
 //         return Jwts.parser()

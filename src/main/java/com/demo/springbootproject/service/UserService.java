@@ -5,7 +5,7 @@ import com.demo.springbootproject.dto.SignUpResponseDTO;
 import com.demo.springbootproject.repository.UserRepository;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-
+import java.util.List;
 import java.time.LocalDateTime;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -44,6 +44,10 @@ public class UserService {
                 user.getUserRole(),
                 user.getCreatedAt()
         );
+    }
+
+    public List<String> getAllUsernames(){
+        return userRepository.findAllUsernames();
     }
 
     public SignUpResponseDTO saveUser(SignUpRequestDTO signUpRequestDTO) {

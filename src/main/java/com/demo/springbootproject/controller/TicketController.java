@@ -38,7 +38,18 @@ public class TicketController {
         pageable.getPageNumber(),
         pageable.getPageSize()
         );
-        return ticketService.findAllTickets(pageable); //based on latest updates show the tickets, if not latest then use the create option 
+        return ticketService.getAllTickets(pageable); //based on latest updates show the tickets, if not latest then use the create option 
+    
+    }
+ 
+@GetMapping("/tickets/{id}")
+    public Page<TicketResponseDTO> findAllTicketsById(@PageableDefault(size = 10) Pageable pageable, Long id) {
+        log.debug(
+        "Received request to fetch tickets. page={}, size={}",
+        pageable.getPageNumber(),
+        pageable.getPageSize()
+        );
+        return ticketService.getAllTicketsById(pageable, id); //based on latest updates show the tickets, if not latest then use the create option 
     
     }
     @GetMapping("/my-tickets")
